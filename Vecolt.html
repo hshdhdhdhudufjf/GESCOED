@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vecort.com</title>
+    <style>
+        /* CSS Ayarları */
+        body { 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            height: 100vh; 
+            background-color: #e0e2e7; /* Açık gri arka plan */
+            color: #333333; /* Koyu yazı rengi */
+        }
+        .sidebar { 
+            width: 15%; 
+            background-color: #25292e; /* Koyu sidebar rengi */
+            display: flex; 
+            flex-direction: column; 
+            padding-top: 20px; 
+        }
+        .sidebar a { 
+            color: #c1c7d0; /* Sidebar yazı rengi */
+            padding: 15px 20px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            transition: background-color 0.3s; 
+            cursor: pointer; 
+        }
+        .sidebar a:hover { 
+            background-color: #3a3f44; /* Hover için koyu gri */
+            color: #ffffff; 
+        }
+        .main-content { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .header { 
+            background-color: #3a3f44; /* Üst menü rengi */
+            padding: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            color: #ffffff; /* Başlık beyaz */
+        }
+        .content-section { 
+            display: none; 
+            padding: 20px; 
+            background-color: #f8f9fa; /* İçerik arka planı */
+            color: #333333; /* İçerik yazı rengi */
+        }
+        .content-section.active { 
+            display: block; 
+        }
+        .message-area { 
+            padding: 20px; 
+            overflow-y: auto; 
+            flex: 1; 
+            background-color: #f0f1f5; /* Mesaj alanı açık gri */
+        }
+        .message-card { 
+            background-color: #dfe3e8; /* Mesaj kart rengi */
+            padding: 10px; 
+            margin-bottom: 15px; 
+            border-radius: 5px; 
+        }
+        .message-card h2 { 
+            font-size: 16px; 
+            color: #2a85e1; /* Kullanıcı adı rengi mavi */
+        }
+        .message-card p { 
+            font-size: 14px; 
+            color: #444444; /* Mesaj metni koyu gri */
+        }
+        .button-group { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 15px; 
+            background-color: #3a3f44; /* Buton grubu üst menü ile aynı */
+        }
+        .button-group button { 
+            background-color: #2a85e1; /* Mavi buton rengi */
+            color: #ffffff; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+        }
+        .button-group button:hover { 
+            background-color: #1c6cb7; /* Hover için koyu mavi */
+        }
+        #fileInput { 
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Kenar Menüsü -->
+    <div class="sidebar">
+        <a onclick="showSection('general')">Genel</a>
+        <a onclick="showSection('rules')">Kurallar</a>
+        <a onclick="showSection('channels')">Kanallar</a>
+        <a onclick="showSection('support')">Destek</a>
+    </div>
+
+    <!-- Ana İçerik -->
+    <div class="main-content">
+        <!-- Üst Menü -->
+        <div class="header">
+            <h1>Discord Tarzı Sohbet</h1>
+            <p id="username">Kullanıcı Adı: Halil</p>
+        </div>
+
+        <!-- İçerik Bölümleri -->
+        <div id="general" class="content-section active">
+            <h2>Genel Bilgiler</h2>
+            <p>Bu, genel bilgiler bölümüdür.</p>
+        </div>
+
+        <div id="rules" class="content-section">
+            <h2>Kurallar</h2>
+            <p>Bu bölümde kurallar yer alır.</p>
+        </div>
+
+        <div id="channels" class="content-section">
+            <h2>Kanallar</h2>
+            <p>Bu bölümde kanallar listelenir.</p>
+        </div>
+
+        <div id="support" class="content-section">
+            <h2>Destek</h2>
+            <p>Bu bölümde destek bilgileri bulunur.</p>
+        </div>
+
+        <!-- Mesaj Alanı -->
+        <div class="message-area" id="message-area">
+            <div class="message-card">
+                <h2>Halil</h2>
+                <p>Selam! Bu, Discord tarzı bir mesaj örneğidir.</p>
+            </div>
+        </div>
+
+        <!-- Butonlar -->
+        <div class="button-group">
+            <button onclick="sendMessage()">Mesaj Gönder</button>
+            <button onclick="triggerFileUpload()">Dosya Yükle</button>
+            <button onclick="logout()">Çıkış Yap</button>
+            <button onclick="changeUsername()">Ad Değiştir</button>
+            <input type="file" id="fileInput" onchange="handleFileUpload()" />
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Bölüm gösterme fonksiyonu
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Mesaj Gönder
+        function sendMessage() {
+            const messageArea = document.getElementById("message-area");
+            const messageText = prompt("Göndermek istediğiniz mesajı yazın:");
+            
+            if (messageText) {
+                const messageCard = document.createElement("div");
+                messageCard.classList.add("message-card");
+                
+                const messageAuthor = document.createElement("h2");
+                messageAuthor.textContent = document.getElementById("username").textContent.replace("Kullanıcı Adı: ", "");
+                
+                const messageContent = document.createElement("p");
+                messageContent.textContent = messageText;
+                
+                messageCard.appendChild(messageAuthor);
+                messageCard.appendChild(messageContent);
+                messageArea.appendChild(messageCard);
+                
+                messageArea.scrollTop = messageArea.scrollHeight;  // Otomatik kaydırma
+            }
+        }
+
+        // Dosya Yükle çağırma
+        function triggerFileUpload() {
+            document.getElementById("fileInput").click();
+        }
+
+        // Dosya yükleme işlemi
+        function handleFileUpload() {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                alert(`Yüklenen dosya: ${fileName}`);
+            }
+        }
+
+        // Kullanıcı adı değiştirme
+        function changeUsername() {
+            const newUsername = prompt("Yeni kullanıcı adınızı girin:");
+            if (newUsername) {
+                document.getElementById("username").textContent = `Kullanıcı Adı: ${newUsername}`;
+            }
+        }
+    </script>
+</body>
+</html>
